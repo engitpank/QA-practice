@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.Arrays;
 
+import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$;
 
 public class DemoQaForm {
@@ -27,27 +28,27 @@ public class DemoQaForm {
     private final String addressValue = "05 October,2000";
 
 
-    private SelenideElement firstNameInput;
-    private SelenideElement lastNameInput;
-    private SelenideElement emailInput;
-    private SelenideElement numberInput;
-    private SelenideElement maleRadio;
-    private SelenideElement femaleRadio;
-    private SelenideElement otherRadio;
-    private SelenideElement dateInput;
-    private SelenideElement dayPicker;
-    private SelenideElement subjectInput;
-    private SelenideElement sportHobby;
-    private SelenideElement readingHobby;
-    private SelenideElement musicHobby;
-    private SelenideElement pictureUpload;
-    private SelenideElement state;
-    private SelenideElement city;
-    private SelenideElement submitButton;
-    private SelenideElement formHeader;
-    private SelenideElement currentAddressInput;
-    private SelenideElement yearPicker;
-    private SelenideElement monthPicker;
+    private SelenideElement firstNameInput = $("#firstName");
+    private SelenideElement lastNameInput = $("#lastName");
+    private SelenideElement emailInput = $("#userEmail");
+    private SelenideElement numberInput = $("#userNumber");
+    private SelenideElement maleRadio = $("[for=gender-radio-1]");
+    private SelenideElement femaleRadio = $("[for=gender-radio-2]");
+    private SelenideElement otherRadio = $("[for=gender-radio-3]");
+    private SelenideElement dateInput = $(".react-datepicker__input-container");
+    private SelenideElement dayPicker = $("[role='listbox']");
+    private SelenideElement subjectInput = $("#subjectsInput");;
+    private SelenideElement sportHobby = $("#hobbies-checkbox-1");;
+    private SelenideElement readingHobby = $("#hobbies-checkbox-2");;
+    private SelenideElement musicHobby = $("#hobbies-checkbox-3");;
+    private SelenideElement pictureUpload = $("#uploadPicture");;
+    private SelenideElement state = $("#state");;
+    private SelenideElement city = $("#city");;
+    private SelenideElement submitButton = $("#submit");;
+    private SelenideElement formHeader = $(".practice-form-wrapper");
+    private SelenideElement currentAddressInput = $("#currentAddress");;
+    private SelenideElement yearPicker = $(".react-datepicker__year-select");
+    private SelenideElement monthPicker = $(".react-datepicker__month-select");
 
     @BeforeAll
     static void beforeAll() {
@@ -58,46 +59,9 @@ public class DemoQaForm {
     /*
     Автотест на проверку формы https://demoqa.com/automation-practice-form
      */
-
-    @BeforeEach
-    void defineInputData() {
-        formHeader = $(".practice-form-wrapper");
-
-        firstNameInput = $("#firstName");
-        lastNameInput = $("#lastName");
-        emailInput = $("#userEmail");
-        numberInput = $("#userNumber");
-
-        // Gender values
-        maleRadio = Selenide.$("[for=gender-radio-1]");
-        femaleRadio = Selenide.$("[for=gender-radio-2]");
-        otherRadio = Selenide.$("[for=gender-radio-3]");
-
-        dateInput = $(".react-datepicker__input-container");
-        dayPicker = $("[role='listbox']");
-        yearPicker = $(".react-datepicker__year-select");
-        monthPicker = $(".react-datepicker__month-select");
-
-
-        subjectInput = $("#subjectsInput");
-
-        sportHobby = Selenide.$("#hobbies-checkbox-1");
-        readingHobby = Selenide.$("#hobbies-checkbox-2");
-        musicHobby = Selenide.$("#hobbies-checkbox-3");
-
-        currentAddressInput = $("#currentAddress");
-
-        pictureUpload = Selenide.$("#uploadPicture");
-
-        state = $("#state");
-        city = $("#city");
-
-        submitButton = $("#submit");
-    }
-
     @Test
     void filledFormShouldBeSubmitted() {
-        Selenide.open("https://demoqa.com/automation-practice-form");
+        open("https://demoqa.com/automation-practice-form");
 
         fillAndSubmitForm();
 
