@@ -7,9 +7,10 @@ import lesson7Files.dto.Glossary;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -28,13 +29,13 @@ public class SelenideZipTest {
             Boolean checked = false;
             ZipEntry ze;
             while ((ze = zis.getNextEntry()) != null) {
-                byte[] entryData = readZipEntryData(zis);
                 if (ze.getName().toLowerCase().endsWith(".json")) {
-                    checkJsonFileContent(new ByteArrayInputStream(entryData), Glossary.class, glossary -> {
-                        assertThat(glossary.title).isEqualTo("example glossary");
-                        assertThat(glossary.glossDiv.title).isEqualTo("S");
-                    });
+                    Gson gson = new Gson();
+                    Glossary glossary = gson.fromJson(new InputStreamReader(zis), Glossary.class);
                     checked = true;
+
+                    assertThat(glossary.title).isEqualTo("example glossary");
+                    assertThat(glossary.glossDiv.title).isEqualTo("S");
                 }
             }
             assertThat(checked).isTrue();
@@ -51,46 +52,16 @@ public class SelenideZipTest {
             Boolean checked = false;
             ZipEntry ze;
             while ((ze = zis.getNextEntry()) != null) {
-                byte[] entryData = readZipEntryData(zis);
                 if (ze.getName().toLowerCase().endsWith(".csv")) {
-                    checkCsvFileContent(new ByteArrayInputStream(entryData), content -> {
-                        assertThat(content.get(0)[0]).isEqualTo("Column1");
-                        assertThat(content.get(0)[1]).isEqualTo("Column2");
-                    });
+                    CSVReader reader = new CSVReader(new InputStreamReader(zis));
+                    List<String[]> content = reader.readAll();
                     checked = true;
+
+                    assertThat(content.get(0)[0]).isEqualTo("Column1");
+                    assertThat(content.get(0)[1]).isEqualTo("Column2");
                 }
             }
             assertThat(checked).isTrue();
-        }
-    }
-
-    private byte[] readZipEntryData(InputStream zis) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = zis.read(buffer)) > 0) {
-            baos.write(buffer, 0, length);
-        }
-        return baos.toByteArray();
-    }
-
-    private void checkCsvFileContent(InputStream is, Consumer<List<String[]>> assertions) throws IOException, CsvException {
-        try (
-                InputStreamReader isr = new InputStreamReader(is);
-                CSVReader csvReader = new CSVReader(isr);
-        ) {
-            List<String[]> content = csvReader.readAll();
-            assertions.accept(content);
-        }
-    }
-
-    private <T> void checkJsonFileContent(InputStream is, Class<T> type, Consumer<T> assertions) throws IOException {
-        try (
-                InputStreamReader isr = new InputStreamReader(is);
-        ) {
-            Gson gson = new Gson();
-            T glossary = gson.fromJson(isr, type);
-            assertions.accept(glossary);
         }
     }
 }
