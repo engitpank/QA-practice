@@ -10,7 +10,13 @@ dependencies {
     testImplementation(
             "com.codeborne:selenide:6.19.1",
             "org.junit.jupiter:junit-jupiter:5.9.3",
-            "com.github.javafaker:javafaker:1.0.2")
+            "com.github.javafaker:javafaker:1.0.2",
+            'org.assertj:assertj-core:3.26.3',
+            'com.codeborne:pdf-test:1.9.1',
+            'com.codeborne:xls-test:1.7.2',
+            'com.opencsv:opencsv:5.9',
+            'com.google.code.gson:gson:2.11.0'
+    )
 }
 
 tasks.withType(JavaCompile) {
