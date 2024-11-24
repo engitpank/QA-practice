@@ -54,6 +54,7 @@ public class DemoQaForm {
     static void beforeAll() {
         Configuration.browserSize = "2560x1440";
         Configuration.pageLoadTimeout = 600000;
+        Configuration.timeout = 60000;
     }
 
     /*
