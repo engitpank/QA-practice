@@ -40,3 +40,10 @@ tasks.withType(JavaCompile) {
 test {
     useJUnitPlatform()
 }
+
+tasks.register('simple_test', Test) {
+    useJUnitPlatform {
+        includeTags("simple")
+    }
+}
+
