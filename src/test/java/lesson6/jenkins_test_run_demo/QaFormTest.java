@@ -1,6 +1,5 @@
 package lesson6.jenkins_test_run_demo;
 
-import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
 import lesson6.RegistrationPage;
 import lesson6.util.RandomElement;
@@ -14,6 +13,8 @@ import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static io.qameta.allure.Allure.step;
 
 public class QaFormTest extends TestBaseExtended {
     RegistrationPage registrationPage = new RegistrationPage();
@@ -49,32 +50,42 @@ public class QaFormTest extends TestBaseExtended {
     @Tag("remote")
     @DisplayName("Автотест на проверку формы https://demoqa.com/automation-practice-form")
     void RegistrationPageShouldSubmitFilledForm() {
-        registrationPage.openPage()
-                .setFirstName(firstName)
-                .setLastName(lastName)
-                .setEmail(email)
-                .setPhoneNumber(phoneNumber)
-                .setGender(gender)
-                .setBirthDate(birthDay, birthMonth, birthYear)
-                .setSubjects(subjects)
-                .setHobbies(hobbies)
-                .uploadPictureFromClassPath(picturePath)
-                .setAddressInfo(address)
-                .setState(state)
-                .setCity(city)
-                .submit();
-        Selenide.sleep(5000);
+        step("Open form", () -> {
+            registrationPage.openPage();
+        });
 
-        registrationPage.verifyResultsModalAppears()
-                .verifyResult("Student Name", String.format("%s %s", firstName, lastName))
-                .verifyResult("Student Email", email)
-                .verifyResult("Gender", gender)
-                .verifyResult("Mobile", phoneNumber)
-                .verifyResult("Date of Birth", String.format("%s %s,%s", birthDay, birthMonth, birthYear))
-                .verifyResult("Subjects", String.join(", ", subjects))
-                .verifyResult("Hobbies", String.join(", ", hobbies))
-                .verifyResult("Address", address)
-                .verifyResult("State and City", String.format("%s %s", state, city))
-                .verifyResult("Picture", picturePath);
+        step("Fill form", () -> {
+            registrationPage
+                    .setFirstName(firstName)
+                    .setLastName(lastName)
+                    .setEmail(email)
+                    .setPhoneNumber(phoneNumber)
+                    .setGender(gender)
+                    .setBirthDate(birthDay, birthMonth, birthYear)
+                    .setSubjects(subjects)
+                    .setHobbies(hobbies)
+                    .uploadPictureFromClassPath(picturePath)
+                    .setAddressInfo(address)
+                    .setState(state)
+                    .setCity(city);
+        });
+
+        step("Submit form", () -> {
+            registrationPage.submit();
+        });
+
+        step("Verify results", () -> {
+            registrationPage.verifyResultsModalAppears()
+                    .verifyResult("Student Name", String.format("%s %s", firstName, lastName))
+                    .verifyResult("Student Email", email)
+                    .verifyResult("Gender", gender)
+                    .verifyResult("Mobile", phoneNumber)
+                    .verifyResult("Date of Birth", String.format("%s %s,%s", birthDay, birthMonth, birthYear))
+                    .verifyResult("Subjects", String.join(", ", subjects))
+                    .verifyResult("Hobbies", String.join(", ", hobbies))
+                    .verifyResult("Address", address)
+                    .verifyResult("State and City", String.format("%s %s", state, city))
+                    .verifyResult("Picture", picturePath);
+        });
     }
 }
